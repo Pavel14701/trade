@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
-from configs.data import UserConfigs, RsiCloudsConfigs, SystemConfigs, AvslConfigs, OkxApiConfigs, CacheConfigs
+from configs.data import UserConfigs, RsiCloudsConfigs, SystemConfigs,\
+    AvslConfigs, OkxApiConfigs, CacheConfigs, AdxConfigs
 
 
 class ConfigsProvider:
@@ -69,4 +70,20 @@ class ConfigsProvider:
             port = int(self.__check('PORT')),
             db = int(self.__check('DB')),
             celery_db = int(self.__check('CELERY_DB'))
+        )
+
+    def load_adx_configs(self) -> AdxConfigs:
+        load_dotenv(dotenv_path='configs/configs_adx.env')
+        value_adx = int(self.__check('ADXRLENGHTS'))
+        return AdxConfigs(
+            timeperiod = int(self.__check('TIMEPERIOD')),
+            lenghts_sig = int(self.__check('LENGHTS_SIG')),
+            adxr_lenghts = None if value_adx == 0 else value_adx,
+            scalar = int(self.__check('SCALAR')),
+            talib = bool(self.__check('TALIB')),
+            tvmode = bool(self.__check('TVMODE')),
+            mamode = str(self.__check('MAMODE')),
+            drift = int(self.__check('DRIFT')),
+            offset = int(self.__check('OFFSET')),
+            trigger = int(self.__check('TRIGGER'))
         )

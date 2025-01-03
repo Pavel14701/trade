@@ -1,5 +1,5 @@
 import pandas as pd
-from typing import NoReturn, Optional, Union
+from typing import NoReturn
 from datasets.methods import PriceDbMethods
 from indicators.data import prepare_data_to_dataframe, create_dataframe, PriceDataFrame
 from api.okx_api import OkxApi, OkxApiData

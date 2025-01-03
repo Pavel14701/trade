@@ -37,6 +37,20 @@ class RsiCloudsConfigs(BaseModel):
     calc_data = str
     macd_talib_config = bool
 
+
+class AdxConfigs(BaseModel):
+    timeperiod = int
+    lenghts_sig = int
+    adxr_lenghts = int|None
+    scalar = int
+    talib = bool
+    tvmode = bool
+    mamode = str
+    drift = int
+    offset = int
+    trigger = int
+
+
 class OkxApiConfigs(BaseModel):
     api_key = str
     secret_key = str
