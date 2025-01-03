@@ -126,7 +126,7 @@ def validate_json_field(mapper:Mapper, connection:Connection, target:Orders) -> 
         try:
             HistoryTradeJSON(**target.history_of_trade)
         except ValidationError as e:
-            raise ValueError(f"Invalid JSON data in history_of_trade") from e
+            raise ValueError("Invalid JSON data in history_of_trade") from e
 
 event.listen(Orders, 'before_insert', validate_json_field)
 event.listen(Orders, 'before_update', validate_json_field)

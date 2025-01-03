@@ -39,7 +39,6 @@ class PriceDbMethods:
         table_class = DynamicClassProvider().get_class(instId, timeframe)
         if table_class is None:
             raise ValueError(f"No table found for {instId} and {timeframe}")
-        
         with get_session() as session:
             query = session.query(
                 table_class.timestamp, table_class.open, table_class.close,

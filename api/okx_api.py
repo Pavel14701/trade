@@ -8,13 +8,14 @@ from configs.provider import ConfigsProvider
 from cache.redis_cache import RedisCache
 
 
-class OkxApi(RedisCache):
+class OkxApi:
     def __init__(self, configs:OkxApiData):
         settings = ConfigsProvider()
         self.api_settings = settings.load_api_okx_configs()
         self.user_settings = settings.load_user_settings()
         self.key = 'contracts_prices'
         self.configs = configs
+        self.cache = RedisCache(configs)
         self.marketDataAPI:MarketData.MarketAPI = self.__create_marketAPI()
         self.accountAPI:Account.AccountAPI = self.__create_accountAPI()
         self.tradeAPI:Trade.TradeAPI = self.__create_trade_api()
@@ -106,17 +107,17 @@ class OkxApi(RedisCache):
         result = self.accountAPI.get_instruments(instType="SWAP")
         result = self.__check_result(result)
         if self.key:
-            super().send_redis_command(result, self.key)
+            self.cache.send_redis_command(result, self.key)
         raise ValueError('Key is not setted')
 
     def check_contract_price_cache(self, data: OkxApiData) -> float:
-        result = self.load_message_from_cache()
+        result = self.cache.load_message_from_cache()
         if result is None:
             raise ValueError("No data found in cache")
         try:
             return float(next(instrument['ctVal'] for instrument in result['data'] if instrument['instId'] == data.instId))
-        except (StopIteration, KeyError, TypeError):
-            raise ValueError("Instrument ID not found or invalid data format")
+        except (StopIteration, KeyError, TypeError) as e:
+            raise ValueError("Instrument ID not found or invalid data format") from e
 
 
     def check_instrument_price(self, data:OkxApiData) -> float:
